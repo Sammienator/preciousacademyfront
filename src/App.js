@@ -10,7 +10,9 @@ import StudentHistoryPage from './components/StudentHistoryPage';
 import './index.css';
 
 // Backend API URL from environment variable
-const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
+const baseUrl = process.env.NODE_ENV === 'production'
+  ? 'https://preciousacademyback-production.up.railway.app/' // Replace with your actual backend URL
+  : 'http://localhost:5000';
 
 const Navbar = () => {
   const navigate = useNavigate();

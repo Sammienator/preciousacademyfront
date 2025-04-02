@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-// Assuming you're using react-icons for icons (install with: npm install react-icons)
-import { FaUserGraduate } from 'react-icons/fa'; // You can swap this for another icon
+import { FaUserGraduate } from 'react-icons/fa';
 
 const StudentsPage = () => {
   const [students, setStudents] = useState([]);
@@ -11,13 +10,16 @@ const StudentsPage = () => {
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
 
+  // Use environment variable for API URL
+  const API_URL = process.env.REACT_APP_API_URL || 'https://preciousacademyback-production.up.railway.app';
+
   useEffect(() => {
     const fetchStudents = async () => {
       try {
         const grade = searchParams.get('grade') || gradeFilter;
         const url = grade
-          ? `http://localhost:5000/api/students?grade=${grade}`
-          : 'http://localhost:5000/api/students';
+          ? `${API_URL}/api/students?grade=${grade}`
+          : `${API_URL}/api/students`;
         
         const response = await fetch(url);
         const result = await response.json();
