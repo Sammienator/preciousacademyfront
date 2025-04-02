@@ -1,13 +1,16 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route, useNavigate } from 'react-router-dom';
-import Welcome from './components/Welcome'; // Assuming this exists
-import Dashboard from './components/Dashboard'; // Placeholder or your existing component
-import StudentsPage from './components/StudentsPage'; // Renamed StudentList
-import AddStudentPage from './components/AddStudentPage'; // Renamed StudentForm
-import TestResultsPage from './components/TestResultsPage'; // Placeholder
-import ReportsPage from './components/ReportsPage'; // Renamed Reports
-import StudentHistoryPage from './components/StudentHistoryPage'; // Renamed StudentHistory
+import Welcome from './components/Welcome';
+import Dashboard from './components/Dashboard';
+import StudentsPage from './components/StudentsPage';
+import AddStudentPage from './components/AddStudentPage';
+import TestResultsPage from './components/TestResultsPage';
+import ReportsPage from './components/ReportsPage';
+import StudentHistoryPage from './components/StudentHistoryPage';
 import './index.css';
+
+// Backend API URL from environment variable
+const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
 
 const Navbar = () => {
   const navigate = useNavigate();
@@ -74,7 +77,7 @@ function App() {
                     <Route path="/students" element={<StudentsPage />} />
                     <Route path="/students/:id/history" element={<StudentHistoryPage />} />
                     <Route path="/add-student" element={<AddStudentPage />} />
-                    <Route path="/test-results" element={<TestResultsPage />} />
+                    <Route path="/test-results" element={<TestResultsPage apiUrl={API_URL} />} />
                     <Route path="/reports" element={<ReportsPage />} />
                   </Routes>
                 </div>

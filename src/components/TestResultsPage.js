@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 
-const TestResultsPage = () => {
+const TestResultsPage = ({ apiUrl }) => {
   const [testResults, setTestResults] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -15,7 +15,7 @@ const TestResultsPage = () => {
       try {
         const grade = searchParams.get('grade') || gradeFilter;
         const term = searchParams.get('term') || termFilter;
-        let url = 'http://localhost:5000/api/test-results';
+        let url = `${apiUrl}/api/test-results`; // Use apiUrl prop from App.js
         const params = new URLSearchParams();
         if (grade) params.append('grade', grade);
         if (term) params.append('term', term);
@@ -35,8 +35,7 @@ const TestResultsPage = () => {
       }
     };
     fetchTestResults();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [searchParams]);
+  }, [searchParams, apiUrl]); // Added apiUrl to dependencies
 
   const handleGradeChange = (e) => {
     const newGrade = e.target.value;
@@ -163,7 +162,7 @@ const TestResultsPage = () => {
         {studentsWithAverages.length === 0 ? (
           <p className="text-white text-center">No test results available for this selection.</p>
         ) : (
-          <table className="grok.average w-full bg-white dark:bg-gray-800 rounded-xl shadow-xl text-white">
+          <table className="w-full bg-white dark:bg-gray-800 rounded-xl shadow-xl text-white">
             <thead>
               <tr className="bg-deep-blue font-semibold">
                 <th className="p-3 text-left">Rank</th>
