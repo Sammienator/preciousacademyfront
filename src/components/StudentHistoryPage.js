@@ -15,16 +15,25 @@ const StudentHistoryPage = () => {
   const [noteForm, setNoteForm] = useState('');
   const [message, setMessage] = useState('');
 
-  const API_URL = process.env.REACT_APP_API_URL || 'https://preciousacademyback-production.up.railway.app';
+  // Ensure no leading/trailing slashes in API_URL
+  const API_URL = (process.env.REACT_APP_API_URL || 'https://preciousacademyback-production.up.railway.app')
+    .replace(/\/+$/, '') // Remove trailing slashes
+    .replace(/^\/+/, ''); // Remove leading slashes
 
   useEffect(() => {
     const fetchStudentData = async () => {
       try {
+        const studentUrl = `${API_URL}/api/students/${id}`;
+        const testUrl = `${API_URL}/api/students/test-results/${id}`;
+        const feeUrl = `${API_URL}/api/students/fees/${id}`;
+        const noteUrl = `${API_URL}/api/students/notes/${id}`;
+        console.log('Fetching from:', { studentUrl, testUrl, feeUrl, noteUrl }); // Debug log
+
         const [studentRes, testRes, feeRes, noteRes] = await Promise.all([
-          fetch(`${API_URL}/api/students/${id}`),
-          fetch(`${API_URL}/api/students/test-results/${id}`),
-          fetch(`${API_URL}/api/students/fees/${id}`),
-          fetch(`${API_URL}/api/students/notes/${id}`),
+          fetch(studentUrl),
+          fetch(testUrl),
+          fetch(feeUrl),
+          fetch(noteUrl),
         ]);
 
         if (!studentRes.ok) throw new Error('Failed to fetch student');

@@ -9,7 +9,10 @@ const TestResultsPage = ({ apiUrl }) => {
   const [termFilter, setTermFilter] = useState('');
   const [searchParams, setSearchParams] = useSearchParams();
 
-  const API_URL = apiUrl || process.env.REACT_APP_API_URL || 'https://preciousacademyback-production.up.railway.app';
+  // Ensure no leading/trailing slashes in API_URL
+  const API_URL = (apiUrl || process.env.REACT_APP_API_URL || 'https://preciousacademyback-production.up.railway.app')
+    .replace(/\/+$/, '') // Remove trailing slashes
+    .replace(/^\/+/, ''); // Remove leading slashes
 
   useEffect(() => {
     const fetchTestResults = async () => {
@@ -22,6 +25,7 @@ const TestResultsPage = ({ apiUrl }) => {
         if (grade) params.append('grade', grade);
         if (term) params.append('term', term);
         if (params.toString()) url += `?${params.toString()}`;
+        console.log('Fetching test results from:', url); // Debug log
 
         const response = await fetch(url);
         if (!response.ok) throw new Error('Failed to fetch test results');

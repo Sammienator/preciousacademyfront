@@ -9,7 +9,10 @@ const ReportsPage = () => {
   const [reportType, setReportType] = useState('scores');
   const [searchParams, setSearchParams] = useSearchParams();
 
-  const API_URL = process.env.REACT_APP_API_URL || 'https://preciousacademyback-production.up.railway.app';
+  // Ensure no leading/trailing slashes in API_URL
+  const API_URL = (process.env.REACT_APP_API_URL || 'https://preciousacademyback-production.up.railway.app')
+    .replace(/\/+$/, '') // Remove trailing slashes
+    .replace(/^\/+/, ''); // Remove leading slashes
 
   useEffect(() => {
     const fetchSummary = async () => {
@@ -17,6 +20,7 @@ const ReportsPage = () => {
         const term = searchParams.get('term') || termFilter;
         let url = `${API_URL}/api/reports/grade-summary?type=${reportType}`;
         if (term) url += `&term=${term}`;
+        console.log('Fetching summary from:', url); // Debug log
 
         const response = await fetch(url);
         if (!response.ok) throw new Error('Failed to fetch summary');
