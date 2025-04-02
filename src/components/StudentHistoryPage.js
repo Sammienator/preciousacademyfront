@@ -15,23 +15,30 @@ const StudentHistoryPage = () => {
   const [noteForm, setNoteForm] = useState('');
   const [message, setMessage] = useState('');
 
-  const API_URL = process.env.REACT_APP_API_URL;
+  const API_URL = process.env.REACT_APP_API_URL || 'https://preciousacademyback-production.up.railway.app';
 
   useEffect(() => {
     const fetchStudentData = async () => {
       try {
         const [studentRes, testRes, feeRes, noteRes] = await Promise.all([
           fetch(`${API_URL}/api/students/${id}`),
-          fetch(`${API_URL}/api/students/${id}/test-results`),
-          fetch(`${API_URL}/api/students/${id}/fees`),
-          fetch(`${API_URL}/api/students/${id}/notes`),
+          fetch(`${API_URL}/api/students/test-results/${id}`),
+          fetch(`${API_URL}/api/students/fees/${id}`),
+          fetch(`${API_URL}/api/students/notes/${id}`),
         ]);
+
+        if (!studentRes.ok) throw new Error('Failed to fetch student');
+        if (!testRes.ok) throw new Error('Failed to fetch test results');
+        if (!feeRes.ok) throw new Error('Failed to fetch fees');
+        if (!noteRes.ok) throw new Error('Failed to fetch notes');
+
         const [studentData, testData, feeData, noteData] = await Promise.all([
           studentRes.json(),
           testRes.json(),
           feeRes.json(),
           noteRes.json(),
         ]);
+
         setStudent(studentData.student);
         setTestResults(testData.testResults || testData);
         setFees(feeData.fees || feeData);
@@ -40,6 +47,7 @@ const StudentHistoryPage = () => {
         setMessage('Failed to load student data');
       }
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     fetchStudentData();
   }, [id]);
 
@@ -48,7 +56,7 @@ const StudentHistoryPage = () => {
     setMessage('');
     try {
       if (Object.values(testForm.subjects).some((val) => val !== '')) {
-        const testResponse = await fetch(`${API_URL}/api/students/${id}/test-results`, {
+        const testResponse = await fetch(`${API_URL}/api/students/test-results/${id}`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
@@ -76,7 +84,7 @@ const StudentHistoryPage = () => {
       }
 
       if (feeForm.term && feeForm.status) {
-        const feeResponse = await fetch(`${API_URL}/api/students/${id}/fees`, {
+        const feeResponse = await fetch(`${API_URL}/api/students/fees/${id}`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(feeForm),
@@ -95,7 +103,7 @@ const StudentHistoryPage = () => {
       }
 
       if (noteForm.trim()) {
-        const noteResponse = await fetch(`${API_URL}/api/students/${id}/notes`, {
+        const noteResponse = await fetch(`${API_URL}/api/students/notes/${id}`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ content: noteForm }),

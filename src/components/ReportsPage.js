@@ -9,7 +9,7 @@ const ReportsPage = () => {
   const [reportType, setReportType] = useState('scores');
   const [searchParams, setSearchParams] = useSearchParams();
 
-  const API_URL = process.env.REACT_APP_API_URL;
+  const API_URL = process.env.REACT_APP_API_URL || 'https://preciousacademyback-production.up.railway.app';
 
   useEffect(() => {
     const fetchSummary = async () => {
@@ -19,18 +19,16 @@ const ReportsPage = () => {
         if (term) url += `&term=${term}`;
 
         const response = await fetch(url);
+        if (!response.ok) throw new Error('Failed to fetch summary');
         const result = await response.json();
-        if (response.ok) {
-          setSummary(result.summary || []);
-        } else {
-          setError(result.message);
-        }
+        setSummary(result.summary || []);
       } catch (err) {
         setError('Failed to fetch summary');
       } finally {
         setLoading(false);
       }
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     fetchSummary();
   }, [searchParams, termFilter, reportType]);
 

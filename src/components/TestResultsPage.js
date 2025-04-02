@@ -9,25 +9,24 @@ const TestResultsPage = ({ apiUrl }) => {
   const [termFilter, setTermFilter] = useState('');
   const [searchParams, setSearchParams] = useSearchParams();
 
+  const API_URL = apiUrl || process.env.REACT_APP_API_URL || 'https://preciousacademyback-production.up.railway.app';
+
   useEffect(() => {
     const fetchTestResults = async () => {
       setLoading(true);
       try {
         const grade = searchParams.get('grade') || gradeFilter;
         const term = searchParams.get('term') || termFilter;
-        let url = `${apiUrl}/api/test-results`;
+        let url = `${API_URL}/api/test-results`;
         const params = new URLSearchParams();
         if (grade) params.append('grade', grade);
         if (term) params.append('term', term);
         if (params.toString()) url += `?${params.toString()}`;
 
         const response = await fetch(url);
+        if (!response.ok) throw new Error('Failed to fetch test results');
         const result = await response.json();
-        if (response.ok) {
-          setTestResults(result.testResults || []);
-        } else {
-          setError(result.message);
-        }
+        setTestResults(result.testResults || []);
       } catch (err) {
         setError('Failed to fetch test results');
       } finally {
@@ -35,7 +34,7 @@ const TestResultsPage = ({ apiUrl }) => {
       }
     };
     fetchTestResults();
-  }, [searchParams, apiUrl]);
+  }, [searchParams, API_URL, gradeFilter, termFilter]);
 
   const handleGradeChange = (e) => {
     const newGrade = e.target.value;
