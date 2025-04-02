@@ -14,12 +14,11 @@ const AddStudentPage = () => {
   });
   const [message, setMessage] = useState('');
 
+  const API_URL = process.env.REACT_APP_API_URL;
+
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData((prevData) => ({
-      ...prevData,
-      [name]: value,
-    }));
+    setFormData((prevData) => ({ ...prevData, [name]: value }));
   };
 
   const handleSubmit = async (e) => {
@@ -34,7 +33,7 @@ const AddStudentPage = () => {
         enrollmentDate: new Date(formData.enrollmentDate),
       };
 
-      const response = await fetch('http://localhost:5000/api/students', {
+      const response = await fetch(`${API_URL}/api/students`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(studentData),
@@ -67,9 +66,7 @@ const AddStudentPage = () => {
     <div>
       <h2 className="text-2xl font-bold text-deep-blue dark:text-white mb-4">Add New Student</h2>
       {message && (
-        <p
-          className={`mb-4 ${message.includes('successfully') ? 'text-green-500' : 'text-red-500'}`}
-        >
+        <p className={`mb-4 ${message.includes('successfully') ? 'text-green-500' : 'text-red-500'}`}>
           {message}
         </p>
       )}

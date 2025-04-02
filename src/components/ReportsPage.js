@@ -9,11 +9,13 @@ const ReportsPage = () => {
   const [reportType, setReportType] = useState('scores');
   const [searchParams, setSearchParams] = useSearchParams();
 
+  const API_URL = process.env.REACT_APP_API_URL;
+
   useEffect(() => {
     const fetchSummary = async () => {
       try {
         const term = searchParams.get('term') || termFilter;
-        let url = `http://localhost:5000/api/reports/grade-summary?type=${reportType}`;
+        let url = `${API_URL}/api/reports/grade-summary?type=${reportType}`;
         if (term) url += `&term=${term}`;
 
         const response = await fetch(url);

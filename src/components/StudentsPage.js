@@ -10,16 +10,13 @@ const StudentsPage = () => {
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
 
-  // Use environment variable for API URL
-  const API_URL = process.env.REACT_APP_API_URL || 'https://preciousacademyback-production.up.railway.app';
+  const API_URL = process.env.REACT_APP_API_URL;
 
   useEffect(() => {
     const fetchStudents = async () => {
       try {
         const grade = searchParams.get('grade') || gradeFilter;
-        const url = grade
-          ? `${API_URL}/api/students?grade=${grade}`
-          : `${API_URL}/api/students`;
+        const url = grade ? `${API_URL}/api/students?grade=${grade}` : `${API_URL}/api/students`;
         
         const response = await fetch(url);
         const result = await response.json();
@@ -68,12 +65,10 @@ const StudentsPage = () => {
 
   return (
     <div className="min-h-screen bg-gray-100 dark:bg-gray-900 py-12 px-6">
-      {/* Header */}
       <h2 className="text-4xl font-extrabold text-deep-blue dark:text-aqua text-center mb-10 animate-fade-in">
         Student Directory
       </h2>
 
-      {/* Filter and Total */}
       <div className="max-w-4xl mx-auto mb-8 flex flex-col sm:flex-row justify-between items-center gap-4">
         <label className="text-deep-blue dark:text-white text-lg font-medium">
           Filter by Grade:
@@ -95,7 +90,6 @@ const StudentsPage = () => {
         </p>
       </div>
 
-      {/* Students Container */}
       <div className="max-w-4xl mx-auto bg-white dark:bg-gray-800 rounded-xl shadow-xl overflow-hidden">
         <div className="divide-y divide-gray-200 dark:divide-gray-700">
           {students.map((student, index) => (
@@ -105,7 +99,6 @@ const StudentsPage = () => {
                 index % 2 === 0 ? 'bg-gray-50 dark:bg-gray-700' : 'bg-white dark:bg-gray-800'
               }`}
             >
-              {/* Student Info with Icon */}
               <div
                 className="flex-1 flex items-center gap-4 cursor-pointer"
                 onClick={() => handleStudentClick(student._id)}
@@ -120,8 +113,6 @@ const StudentsPage = () => {
                   </p>
                 </div>
               </div>
-
-              {/* School Code */}
               <div className="flex-1 text-right">
                 <span className="inline-block bg-teal-100 dark:bg-teal-700 text-teal-800 dark:text-teal-200 text-sm font-semibold px-3 py-1 rounded-full">
                   {student.schoolCode}
@@ -132,7 +123,6 @@ const StudentsPage = () => {
         </div>
       </div>
 
-      {/* Footer Text */}
       <p className="mt-10 text-center text-lg text-gray-700 dark:text-gray-300 max-w-2xl mx-auto animate-fade-in">
         Our students are the heart of Precious Academy, each bringing unique talents and aspirations to our vibrant community.
       </p>

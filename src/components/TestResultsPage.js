@@ -15,7 +15,7 @@ const TestResultsPage = ({ apiUrl }) => {
       try {
         const grade = searchParams.get('grade') || gradeFilter;
         const term = searchParams.get('term') || termFilter;
-        let url = `${apiUrl}/api/test-results`; // Use apiUrl prop from App.js
+        let url = `${apiUrl}/api/test-results`;
         const params = new URLSearchParams();
         if (grade) params.append('grade', grade);
         if (term) params.append('term', term);
@@ -35,7 +35,7 @@ const TestResultsPage = ({ apiUrl }) => {
       }
     };
     fetchTestResults();
-  }, [searchParams, apiUrl]); // Added apiUrl to dependencies
+  }, [searchParams, apiUrl]);
 
   const handleGradeChange = (e) => {
     const newGrade = e.target.value;
@@ -49,7 +49,6 @@ const TestResultsPage = ({ apiUrl }) => {
     setSearchParams({ ...(gradeFilter && { grade: gradeFilter }), ...(newTerm && { term: newTerm }) });
   };
 
-  // Calculate per-student averages and sort
   const calculateStudentAverages = () => {
     const studentMap = testResults.reduce((acc, test) => {
       const studentId = test.studentId._id;
@@ -82,7 +81,6 @@ const TestResultsPage = ({ apiUrl }) => {
 
   const studentsWithAverages = calculateStudentAverages();
 
-  // Determine color based on average
   const getAverageColor = (average) => {
     if (average === 'N/A') return 'text-gray-400';
     if (average >= 85) return 'text-green-400';

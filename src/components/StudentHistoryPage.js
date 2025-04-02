@@ -15,14 +15,16 @@ const StudentHistoryPage = () => {
   const [noteForm, setNoteForm] = useState('');
   const [message, setMessage] = useState('');
 
+  const API_URL = process.env.REACT_APP_API_URL;
+
   useEffect(() => {
     const fetchStudentData = async () => {
       try {
         const [studentRes, testRes, feeRes, noteRes] = await Promise.all([
-          fetch(`http://localhost:5000/api/students/${id}`),
-          fetch(`http://localhost:5000/api/students/${id}/test-results`),
-          fetch(`http://localhost:5000/api/students/${id}/fees`),
-          fetch(`http://localhost:5000/api/students/${id}/notes`),
+          fetch(`${API_URL}/api/students/${id}`),
+          fetch(`${API_URL}/api/students/${id}/test-results`),
+          fetch(`${API_URL}/api/students/${id}/fees`),
+          fetch(`${API_URL}/api/students/${id}/notes`),
         ]);
         const [studentData, testData, feeData, noteData] = await Promise.all([
           studentRes.json(),
@@ -43,12 +45,10 @@ const StudentHistoryPage = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setMessage(''); // Clear previous messages
-
+    setMessage('');
     try {
-      // Handle Test Results
       if (Object.values(testForm.subjects).some((val) => val !== '')) {
-        const testResponse = await fetch(`http://localhost:5000/api/students/${id}/test-results`, {
+        const testResponse = await fetch(`${API_URL}/api/students/${id}/test-results`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
@@ -75,9 +75,8 @@ const StudentHistoryPage = () => {
         }
       }
 
-      // Handle Fees
       if (feeForm.term && feeForm.status) {
-        const feeResponse = await fetch(`http://localhost:5000/api/students/${id}/fees`, {
+        const feeResponse = await fetch(`${API_URL}/api/students/${id}/fees`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(feeForm),
@@ -95,9 +94,8 @@ const StudentHistoryPage = () => {
         }
       }
 
-      // Handle Notes
       if (noteForm.trim()) {
-        const noteResponse = await fetch(`http://localhost:5000/api/students/${id}/notes`, {
+        const noteResponse = await fetch(`${API_URL}/api/students/${id}/notes`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ content: noteForm }),
@@ -111,7 +109,6 @@ const StudentHistoryPage = () => {
         }
       }
 
-      // Reset forms only if there were successful updates
       if (!message.includes('Failed')) {
         setTestForm({ term: 'Term 1', subjects: { maths: '', english: '', science: '', history: '', geography: '' } });
         setFeeForm({ term: 'Term 1', status: 'Unpaid' });
@@ -132,7 +129,6 @@ const StudentHistoryPage = () => {
 
   return (
     <div className="min-h-screen bg-gray-100 dark:bg-gray-900 py-12 px-6 font-custom">
-      {/* Header */}
       <h2 className="text-4xl font-extrabold text-deep-blue dark:text-aqua text-center mb-8 animate-fade-in">
         {student.name} (Grade {student.grade})
       </h2>
@@ -147,11 +143,9 @@ const StudentHistoryPage = () => {
         </p>
       )}
 
-      {/* Forms Section */}
       <div className="max-w-3xl mx-auto mb-10">
         <h3 className="text-2xl font-semibold text-deep-blue dark:text-aqua mb-4">Update Student Records</h3>
         <form onSubmit={handleSubmit} className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 space-y-6">
-          {/* Test Results Form */}
           <div>
             <h4 className="text-xl font-medium text-gray-800 dark:text-gray-100 mb-3">Test Results</h4>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -184,7 +178,6 @@ const StudentHistoryPage = () => {
             </div>
           </div>
 
-          {/* Fees Form */}
           <div>
             <h4 className="text-xl font-medium text-gray-800 dark:text-gray-100 mb-3">Fees</h4>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -223,7 +216,6 @@ const StudentHistoryPage = () => {
             </div>
           </div>
 
-          {/* Notes Form */}
           <div>
             <h4 className="text-xl font-medium text-gray-800 dark:text-gray-100 mb-3">Notes</h4>
             <textarea
@@ -234,7 +226,6 @@ const StudentHistoryPage = () => {
             />
           </div>
 
-          {/* Single Submit Button */}
           <button
             type="submit"
             className="w-full bg-aqua text-dark-black px-6 py-3 rounded-lg hover:bg-teal-500 hover:text-white transition duration-300 shadow-md"
@@ -244,11 +235,9 @@ const StudentHistoryPage = () => {
         </form>
       </div>
 
-      {/* Results Section */}
       <div className="max-w-3xl mx-auto">
         <h3 className="text-2xl font-semibold text-deep-blue dark:text-aqua mb-4">Student History</h3>
         <div className="space-y-8">
-          {/* Test Results */}
           <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6">
             <h4 className="text-xl font-medium text-gray-800 dark:text-gray-100 mb-3">Test Results</h4>
             {testResults.length === 0 ? (
@@ -264,7 +253,6 @@ const StudentHistoryPage = () => {
             )}
           </div>
 
-          {/* Fees */}
           <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6">
             <h4 className="text-xl font-medium text-gray-800 dark:text-gray-100 mb-3">Fees</h4>
             {fees.length === 0 ? (
@@ -280,7 +268,6 @@ const StudentHistoryPage = () => {
             )}
           </div>
 
-          {/* Notes */}
           <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6">
             <h4 className="text-xl font-medium text-gray-800 dark:text-gray-100 mb-3">Notes</h4>
             {notes.length === 0 ? (

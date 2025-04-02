@@ -9,52 +9,30 @@ import ReportsPage from './components/ReportsPage';
 import StudentHistoryPage from './components/StudentHistoryPage';
 import './index.css';
 
-// Backend API URL from environment variable
-const baseUrl = process.env.NODE_ENV === 'production'
-  ? 'https://preciousacademyback-production.up.railway.app/' // Replace with your actual backend URL
-  : 'http://localhost:5000';
+const API_URL = process.env.REACT_APP_API_URL;
 
 const Navbar = () => {
   const navigate = useNavigate();
-
   return (
     <nav className="bg-deep-blue text-white p-4 flex justify-between items-center">
       <h1 className="text-xl font-bold">Precious Academy</h1>
       <div className="flex space-x-4">
-        <button
-          onClick={() => navigate('/dashboard')}
-          className="hover:text-aqua transition duration-300"
-        >
+        <button onClick={() => navigate('/dashboard')} className="hover:text-aqua transition duration-300">
           Dashboard
         </button>
-        <button
-          onClick={() => navigate('/students')}
-          className="hover:text-aqua transition duration-300"
-        >
+        <button onClick={() => navigate('/students')} className="hover:text-aqua transition duration-300">
           Students
         </button>
-        <button
-          onClick={() => navigate('/add-student')}
-          className="hover:text-aqua transition duration-300"
-        >
+        <button onClick={() => navigate('/add-student')} className="hover:text-aqua transition duration-300">
           Add Student
         </button>
-        <button
-          onClick={() => navigate('/test-results')}
-          className="hover:text-aqua transition duration-300"
-        >
+        <button onClick={() => navigate('/test-results')} className="hover:text-aqua transition duration-300">
           Test Results
         </button>
-        <button
-          onClick={() => navigate('/reports')}
-          className="hover:text-aqua transition duration-300"
-        >
+        <button onClick={() => navigate('/reports')} className="hover:text-aqua transition duration-300">
           Reports
         </button>
-        <button
-          onClick={() => navigate('/')}
-          className="bg-aqua text-dark-black px-4 py-2 rounded-lg hover:bg-white transition duration-300"
-        >
+        <button onClick={() => navigate('/')} className="bg-aqua text-dark-black px-4 py-2 rounded-lg hover:bg-white transition duration-300">
           Exit
         </button>
       </div>

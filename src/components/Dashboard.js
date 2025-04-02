@@ -6,14 +6,12 @@ function Dashboard() {
   const [activities, setActivities] = useState(0);
   const [branches, setBranches] = useState(0);
 
-  // Hardcoded target values for Precious Academy
-  const targetStudents = 500; // Example total students
-  const targetGrades = 13; // 13 grades
-  const targetActivities = 10; // Example number of extracurricular activities
-  const targetBranches = 4; // Four branches
+  const targetStudents = 500;
+  const targetGrades = 13;
+  const targetActivities = 10;
+  const targetBranches = 4;
 
   useEffect(() => {
-    // Countdown animation effect
     const animateCount = (setter, target, duration) => {
       let start = 0;
       const stepTime = Math.abs(Math.floor(duration / target));
@@ -21,13 +19,12 @@ function Dashboard() {
         start += 1;
         setter(start);
         if (start >= target) {
-          setter(target); // Ensure it stops at the exact target
+          setter(target);
           clearInterval(timer);
         }
       }, stepTime);
     };
 
-    // Start animations with slight delays for a cascading effect
     animateCount(setStudents, targetStudents, 2000);
     setTimeout(() => animateCount(setGrades, targetGrades, 1500), 300);
     setTimeout(() => animateCount(setActivities, targetActivities, 1800), 600);
@@ -40,9 +37,7 @@ function Dashboard() {
         Welcome to Precious Academy
       </h2>
 
-      {/* Stacked Components */}
       <div className="space-y-8 max-w-2xl mx-auto">
-        {/* Total Students Card */}
         <div className="bg-deep-blue text-white p-6 rounded-lg shadow-lg transform hover:scale-105 transition duration-300">
           <h3 className="text-2xl font-semibold">Total Students</h3>
           <p className="text-5xl font-bold mt-2">{students}</p>
@@ -51,7 +46,6 @@ function Dashboard() {
           </p>
         </div>
 
-        {/* Total Grades Card */}
         <div className="bg-aqua text-dark-black p-6 rounded-lg shadow-lg transform hover:scale-105 transition duration-300">
           <h3 className="text-2xl font-semibold">Grades</h3>
           <p className="text-5xl font-bold mt-2">{grades}</p>
@@ -60,7 +54,6 @@ function Dashboard() {
           </p>
         </div>
 
-        {/* Extracurricular Activities Card */}
         <div className="bg-purple-600 text-white p-6 rounded-lg shadow-lg transform hover:scale-105 transition duration-300">
           <h3 className="text-2xl font-semibold">Activities</h3>
           <p className="text-5xl font-bold mt-2">{activities}</p>
@@ -69,7 +62,6 @@ function Dashboard() {
           </p>
         </div>
 
-        {/* Branches Card */}
         <div className="bg-teal-500 text-white p-6 rounded-lg shadow-lg transform hover:scale-105 transition duration-300">
           <h3 className="text-2xl font-semibold">Branches</h3>
           <p className="text-5xl font-bold mt-2">{branches}</p>
@@ -79,7 +71,6 @@ function Dashboard() {
         </div>
       </div>
 
-      {/* Longer Text Section */}
       <div className="mt-12 max-w-3xl mx-auto text-center">
         <h3 className="text-2xl font-semibold text-deep-blue dark:text-aqua mb-4 animate-fade-in">
           About Precious Academy
