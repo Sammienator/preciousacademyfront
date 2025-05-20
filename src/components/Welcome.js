@@ -13,12 +13,14 @@ function Welcome() {
         Established in 2023, Precious Academy is committed to nurturing young minds and fostering academic excellence.
         Our dedicated staff and innovative programs ensure every student shines brightly.
       </p>
-      <button
-        onClick={() => navigate('/dashboard')}
-        className="bg-deep-blue text-white py-3 px-6 rounded-lg hover:bg-aqua hover:text-dark-black transition duration-300"
-      >
-        Enter Application
-      </button>
+      <div className="flex gap-4">
+        <button
+          onClick={() => navigate('/login')}
+          className="bg-deep-blue text-white py-3 px-6 rounded-lg hover:bg-aqua hover:text-dark-black transition duration-300"
+        >
+          Login
+        </button>
+      </div>
     </div>
   );
 }

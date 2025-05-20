@@ -15,11 +15,11 @@ const StudentHistoryPage = () => {
   const [noteForm, setNoteForm] = useState('');
   const [message, setMessage] = useState('');
 
-  // Ensure no leading/trailing slashes in API_URL
   const API_URL = (process.env.REACT_APP_API_URL || 'https://preciousacademyback-production.up.railway.app')
-    .replace(/\/+$/, '') // Remove trailing slashes
-    .replace(/^\/+/, ''); // Remove leading slashes
+    .replace(/\/+$/, '')
+    .replace(/^\/+/, '');
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     const fetchStudentData = async () => {
       try {
@@ -27,13 +27,13 @@ const StudentHistoryPage = () => {
         const testUrl = `${API_URL}/api/students/test-results/${id}`;
         const feeUrl = `${API_URL}/api/students/fees/${id}`;
         const noteUrl = `${API_URL}/api/students/notes/${id}`;
-        console.log('Fetching from:', { studentUrl, testUrl, feeUrl, noteUrl }); // Debug log
+        const headers = { 'Authorization': `Bearer ${localStorage.getItem('token')}` };
 
         const [studentRes, testRes, feeRes, noteRes] = await Promise.all([
-          fetch(studentUrl),
-          fetch(testUrl),
-          fetch(feeUrl),
-          fetch(noteUrl),
+          fetch(studentUrl, { headers }),
+          fetch(testUrl, { headers }),
+          fetch(feeUrl, { headers }),
+          fetch(noteUrl, { headers }),
         ]);
 
         if (!studentRes.ok) throw new Error('Failed to fetch student');
@@ -56,7 +56,6 @@ const StudentHistoryPage = () => {
         setMessage('Failed to load student data');
       }
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
     fetchStudentData();
   }, [id]);
 
@@ -67,7 +66,10 @@ const StudentHistoryPage = () => {
       if (Object.values(testForm.subjects).some((val) => val !== '')) {
         const testResponse = await fetch(`${API_URL}/api/students/test-results/${id}`, {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${localStorage.getItem('token')}`,
+          },
           body: JSON.stringify({
             term: testForm.term,
             subjects: {
@@ -92,10 +94,13 @@ const StudentHistoryPage = () => {
         }
       }
 
-      if (feeForm.term && feeForm.status) {
+      if (localStorage.getItem('role') === 'admin' && feeForm.term && feeForm.status) {
         const feeResponse = await fetch(`${API_URL}/api/students/fees/${id}`, {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${localStorage.getItem('token')}`,
+          },
           body: JSON.stringify(feeForm),
         });
         const feeResult = await feeResponse.json();
@@ -114,7 +119,10 @@ const StudentHistoryPage = () => {
       if (noteForm.trim()) {
         const noteResponse = await fetch(`${API_URL}/api/students/notes/${id}`, {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${localStorage.getItem('token')}`,
+          },
           body: JSON.stringify({ content: noteForm }),
         });
         const noteResult = await noteResponse.json();
@@ -166,22 +174,15 @@ const StudentHistoryPage = () => {
           <div>
             <h4 className="text-xl font-medium text-gray-800 dark:text-gray-100 mb-3">Test Results</h4>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div className="relative">
-                <select
-                  value={testForm.term}
-                  onChange={(e) => setTestForm({ ...testForm, term: e.target.value })}
-                  className="w-full p-3 rounded-lg border border-aqua bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200 shadow-sm focus:outline-none focus:ring-2 focus:ring-aqua transition-all duration-300 hover:bg-aqua/10 appearance-none cursor-pointer"
-                >
-                  <option value="Term 1">Term 1</option>
-                  <option value="Term 2">Term 2</option>
-                  <option value="Term 3">Term 3</option>
-                </select>
-                <div className="absolute right-3 top-1/2 transform -translate-y-1/2 pointer-events-none text-aqua">
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
-                  </svg>
-                </div>
-              </div>
+              <select
+                value={testForm.term}
+                onChange={(e) => setTestForm({ ...testForm, term: e.target.value })}
+                className="w-full p-3 rounded-lg border border-aqua bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200 shadow-sm focus:outline-none focus:ring-2 focus:ring-aqua transition-all duration-300 hover:bg-aqua/10"
+              >
+                <option value="Term 1">Term 1</option>
+                <option value="Term 2">Term 2</option>
+                <option value="Term 3">Term 3</option>
+              </select>
               {['maths', 'english', 'science', 'history', 'geography'].map((subject) => (
                 <input
                   key={subject}
@@ -195,43 +196,31 @@ const StudentHistoryPage = () => {
             </div>
           </div>
 
-          <div>
-            <h4 className="text-xl font-medium text-gray-800 dark:text-gray-100 mb-3">Fees</h4>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div className="relative">
+          {localStorage.getItem('role') === 'admin' && (
+            <div>
+              <h4 className="text-xl font-medium text-gray-800 dark:text-gray-100 mb-3">Fees</h4>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <select
                   value={feeForm.term}
                   onChange={(e) => setFeeForm({ ...feeForm, term: e.target.value })}
-                  className="w-full p-3 rounded-lg border border-aqua bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200 shadow-sm focus:outline-none focus:ring-2 focus:ring-aqua transition-all duration-300 hover:bg-aqua/10 appearance-none cursor-pointer"
+                  className="w-full p-3 rounded-lg border border-aqua bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200 shadow-sm focus:outline-none focus:ring-2 focus:ring-aqua transition-all duration-300 hover:bg-aqua/10"
                 >
                   <option value="Term 1">Term 1</option>
                   <option value="Term 2">Term 2</option>
                   <option value="Term 3">Term 3</option>
                 </select>
-                <div className="absolute right-3 top-1/2 transform -translate-y-1/2 pointer-events-none text-aqua">
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
-                  </svg>
-                </div>
-              </div>
-              <div className="relative">
                 <select
                   value={feeForm.status}
                   onChange={(e) => setFeeForm({ ...feeForm, status: e.target.value })}
-                  className="w-full p-3 rounded-lg border border-aqua bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200 shadow-sm focus:outline-none focus:ring-2 focus:ring-aqua transition-all duration-300 hover:bg-aqua/10 appearance-none cursor-pointer"
+                  className="w-full p-3 rounded-lg border border-aqua bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200 shadow-sm focus:outline-none focus:ring-2 focus:ring-aqua transition-all duration-300 hover:bg-aqua/10"
                 >
                   <option value="Paid">Paid</option>
                   <option value="Partial">Partial</option>
                   <option value="Unpaid">Unpaid</option>
                 </select>
-                <div className="absolute right-3 top-1/2 transform -translate-y-1/2 pointer-events-none text-aqua">
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
-                  </svg>
-                </div>
               </div>
             </div>
-          </div>
+          )}
 
           <div>
             <h4 className="text-xl font-medium text-gray-800 dark:text-gray-100 mb-3">Notes</h4>

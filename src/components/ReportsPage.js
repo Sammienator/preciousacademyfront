@@ -9,20 +9,20 @@ const ReportsPage = () => {
   const [reportType, setReportType] = useState('scores');
   const [searchParams, setSearchParams] = useSearchParams();
 
-  // Ensure no leading/trailing slashes in API_URL
   const API_URL = (process.env.REACT_APP_API_URL || 'https://preciousacademyback-production.up.railway.app')
-    .replace(/\/+$/, '') // Remove trailing slashes
-    .replace(/^\/+/, ''); // Remove leading slashes
+    .replace(/\/+$/, '')
+    .replace(/^\/+/, '');
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     const fetchSummary = async () => {
       try {
         const term = searchParams.get('term') || termFilter;
         let url = `${API_URL}/api/reports/grade-summary?type=${reportType}`;
         if (term) url += `&term=${term}`;
-        console.log('Fetching summary from:', url); // Debug log
-
-        const response = await fetch(url);
+        const response = await fetch(url, {
+          headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` },
+        });
         if (!response.ok) throw new Error('Failed to fetch summary');
         const result = await response.json();
         setSummary(result.summary || []);
@@ -32,20 +32,17 @@ const ReportsPage = () => {
         setLoading(false);
       }
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
     fetchSummary();
   }, [searchParams, termFilter, reportType]);
 
-  const handleTermChange = (e) => {
-    const newTerm = e.target.value;
-    setTermFilter(newTerm);
-    setSearchParams({ ...(newTerm && { term: newTerm }), type: reportType });
+  const handleTermChange = (term) => {
+    setTermFilter(term);
+    setSearchParams({ ...(term && { term }), type: reportType });
   };
 
-  const handleReportTypeChange = (e) => {
-    const newType = e.target.value;
-    setReportType(newType);
-    setSearchParams({ ...(termFilter && { term: termFilter }), type: newType });
+  const handleReportTypeChange = (type) => {
+    setReportType(type);
+    setSearchParams({ ...(termFilter && { term: termFilter }), type });
   };
 
   if (loading) {
@@ -72,38 +69,36 @@ const ReportsPage = () => {
 
       <div className="max-w-5xl mx-auto mb-8 flex flex-col sm:flex-row justify-between items-center gap-6">
         <div className="flex flex-col sm:flex-row gap-4">
-          <div className="relative">
+          <div>
             <label className="text-white text-lg font-medium">Filter by Term:</label>
-            <select
-              value={termFilter}
-              onChange={handleTermChange}
-              className="ml-2 p-3 w-48 rounded-lg border border-aqua bg-white dark:bg-gray-800 text-gray-700 dark:text-white shadow-sm focus:outline-none focus:ring-2 focus:ring-aqua transition-all duration-300 hover:bg-aqua/10 appearance-none cursor-pointer"
-            >
-              <option value="">All Terms</option>
-              <option value="Term 1">Term 1</option>
-              <option value="Term 2">Term 2</option>
-              <option value="Term 3">Term 3</option>
-            </select>
-            <div className="absolute right-4 top-12 pointer-events-none text-aqua">
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
-              </svg>
+            <div className="flex gap-2 mt-2">
+              {['Term 1', 'Term 2', 'Term 3'].map((term) => (
+                <button
+                  key={term}
+                  onClick={() => handleTermChange(term)}
+                  className={`px-4 py-2 rounded-lg ${
+                    termFilter === term ? 'bg-aqua text-dark-black' : 'bg-deep-blue text-white'
+                  } hover:bg-aqua hover:text-dark-black transition duration-300`}
+                >
+                  {term}
+                </button>
+              ))}
             </div>
           </div>
-          <div className="relative">
+          <div>
             <label className="text-white text-lg font-medium">Report Type:</label>
-            <select
-              value={reportType}
-              onChange={handleReportTypeChange}
-              className="ml-2 p-3 w-48 rounded-lg border border-aqua bg-white dark:bg-gray-800 text-gray-700 dark:text-white shadow-sm focus:outline-none focus:ring-2 focus:ring-aqua transition-all duration-300 hover:bg-aqua/10 appearance-none cursor-pointer"
-            >
-              <option value="scores">Test Scores</option>
-              <option value="fees">Fees</option>
-            </select>
-            <div className="absolute right-4 top-12 pointer-events-none text-aqua">
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
-              </svg>
+            <div className="flex gap-2 mt-2">
+              {['scores', 'fees'].map((type) => (
+                <button
+                  key={type}
+                  onClick={() => handleReportTypeChange(type)}
+                  className={`px-4 py-2 rounded-lg ${
+                    reportType === type ? 'bg-aqua text-dark-black' : 'bg-deep-blue text-white'
+                  } hover:bg-aqua hover:text-dark-black transition duration-300`}
+                >
+                  {type === 'scores' ? 'Test Scores' : 'Fees'}
+                </button>
+              ))}
             </div>
           </div>
         </div>

@@ -33,49 +33,36 @@ function Dashboard() {
 
   return (
     <div className="p-6 bg-gray-100 dark:bg-gray-900 min-h-screen">
-      <h2 className="text-4xl font-extrabold text-deep-blue dark:text-aqua mb-10 text-center animate-bounce">
+      <h2 className="text-4xl font-extrabold text-deep-blue dark:text-aqua mb-10 text-center animate-pulse">
         Welcome to Precious Academy
       </h2>
 
-      <div className="space-y-8 max-w-2xl mx-auto">
-        <div className="bg-deep-blue text-white p-6 rounded-lg shadow-lg transform hover:scale-105 transition duration-300">
-          <h3 className="text-2xl font-semibold">Total Students</h3>
-          <p className="text-5xl font-bold mt-2">{students}</p>
-          <p className="mt-2 text-sm opacity-80">
-            A thriving community of learners from diverse backgrounds.
-          </p>
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 max-w-5xl mx-auto">
+        <div className="bg-gradient-to-r from-deep-blue to-teal-500 text-white p-6 rounded-xl shadow-xl transform hover:scale-105 transition duration-300">
+          <h3 className="text-xl font-bold">Total Students</h3>
+          <p className="text-4xl font-extrabold mt-2">{students}</p>
+          <p className="mt-2 text-sm opacity-80">A thriving community of learners.</p>
         </div>
-
-        <div className="bg-aqua text-dark-black p-6 rounded-lg shadow-lg transform hover:scale-105 transition duration-300">
-          <h3 className="text-2xl font-semibold">Grades</h3>
-          <p className="text-5xl font-bold mt-2">{grades}</p>
-          <p className="mt-2 text-sm opacity-80">
-            Comprehensive education from Kindergarten to Grade 12.
-          </p>
+        <div className="bg-gradient-to-r from-aqua to-purple-500 text-dark-black p-6 rounded-xl shadow-xl transform hover:scale-105 transition duration-300">
+          <h3 className="text-xl font-bold">Grades</h3>
+          <p className="text-4xl font-extrabold mt-2">{grades}</p>
+          <p className="mt-2 text-sm opacity-80">From Kindergarten to Grade 12.</p>
         </div>
-
-        <div className="bg-purple-600 text-white p-6 rounded-lg shadow-lg transform hover:scale-105 transition duration-300">
-          <h3 className="text-2xl font-semibold">Activities</h3>
-          <p className="text-5xl font-bold mt-2">{activities}</p>
-          <p className="mt-2 text-sm opacity-80">
-            Enriching programs like sports, arts, and science clubs.
-          </p>
+        <div className="bg-gradient-to-r from-purple-600 to-pink-500 text-white p-6 rounded-xl shadow-xl transform hover:scale-105 transition duration-300">
+          <h3 className="text-xl font-bold">Activities</h3>
+          <p className="text-4xl font-extrabold mt-2">{activities}</p>
+          <p className="mt-2 text-sm opacity-80">Sports, arts, and science clubs.</p>
         </div>
-
-        <div className="bg-teal-500 text-white p-6 rounded-lg shadow-lg transform hover:scale-105 transition duration-300">
-          <h3 className="text-2xl font-semibold">Branches</h3>
-          <p className="text-5xl font-bold mt-2">{branches}</p>
-          <p className="mt-2 text-sm opacity-80">
-            Four locations spreading excellence across the region.
-          </p>
+        <div className="bg-gradient-to-r from-teal-500 to-green-500 text-white p-6 rounded-xl shadow-xl transform hover:scale-105 transition duration-300">
+          <h3 className="text-xl font-bold">Branches</h3>
+          <p className="text-4xl font-extrabold mt-2">{branches}</p>
+          <p className="mt-2 text-sm opacity-80">Four locations across the region.</p>
         </div>
       </div>
 
       <div className="mt-12 max-w-3xl mx-auto text-center">
-        <h3 className="text-2xl font-semibold text-deep-blue dark:text-aqua mb-4 animate-fade-in">
-          About Precious Academy
-        </h3>
-        <p className="text-lg text-gray-700 dark:text-gray-300 leading-relaxed animate-fade-in">
+        <h3 className="text-2xl font-bold text-deep-blue dark:text-aqua mb-4">About Precious Academy</h3>
+        <p className="text-lg text-gray-700 dark:text-gray-300 leading-relaxed">
           Precious Academy is more than just a school—it’s a place where dreams take root and futures are built. 
           With 13 grades spanning Kindergarten to Grade 12, we offer a nurturing environment for over 500 students 
           across our four vibrant branches. Our 10 extracurricular activities, from soccer to symphony, ensure 
